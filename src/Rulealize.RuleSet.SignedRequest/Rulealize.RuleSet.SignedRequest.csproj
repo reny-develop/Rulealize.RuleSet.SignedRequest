@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A package that distributes a document, so it carries no assembly at all. What each of the
+    four properties below is for is in the registry's guide:
+    https://github.com/reny-develop/Rulealize.Registry/blob/main/doc/publish.md
+
+    Nothing here references the rule sets this document holds. `uses` names them and the
+    identifier it names them by is the package they are published under, so a restore reaches
+    the feed without anything in a project file saying so. A PackageReference would be a
+    second place for that to be written down, and a second place to get it wrong.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <EnableDefaultItems>false</EnableDefaultItems>
+
+    <PackageId>Rulealize.RuleSet.SignedRequest</PackageId>
+    <Version>1.0.0</Version>
+
+    <Authors>Reny</Authors>
+    <Description>A request that may not be granted until enough people have signed it. A Rulealize rule set, composed of two others.</Description>
+    <PackageTags>rulealize;ruleset;approval;dual-control;composition</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/reny-develop/Rulealize.RuleSet.SignedRequest</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Named, not globbed. `restore` writes the documents this one holds into the folder it
+      resolves them from, and for a composite that folder is this one — so a glob would put
+      somebody else's rule sets inside this package, which the registry refuses and which
+      would have shipped them under this licence. A leaf can glob; a composite cannot.
+    -->
+    <None Include="ruleset/signed-request.json" Pack="true" PackagePath="ruleset/" />
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+</Project>
