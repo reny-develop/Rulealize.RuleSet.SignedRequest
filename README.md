@@ -8,12 +8,13 @@ A request that may not be granted until enough people have signed it — a
 | Rule set id | `Rulealize.RuleSet.SignedRequest` |
 | Package | [`Rulealize.RuleSet.SignedRequest`](https://www.nuget.org/packages/Rulealize.RuleSet.SignedRequest) |
 | Inputs | none of its own |
+| Projections | none of its own; its components' as `req.*` and `sigs.*` |
 | Holds | [`Request`](https://www.nuget.org/packages/Rulealize.RuleSet.Request) as `req`, [`Signatures`](https://www.nuget.org/packages/Rulealize.RuleSet.Signatures) as `sigs` |
 | Draws on | State, Comparison, Record, Logic |
 
 ```json
 "uses": [
-  { "ruleSet": "Rulealize.RuleSet.SignedRequest", "version": "^1.0", "as": "approval" }
+  { "ruleSet": "Rulealize.RuleSet.SignedRequest", "version": "^1.1", "as": "approval" }
 ]
 ```
 
@@ -60,6 +61,21 @@ two of three     req.grant             ← now it appears
 granted          terminal (granted)
 ```
 
+## What a screen shows
+
+What its components say, under the names it holds them by — it adds no state, so it has
+nothing of its own to say:
+
+```
+req.subjects   req.stage   req.subject
+sigs.signatories   sigs.required   sigs.signed   sigs.waiting   sigs.outcome
+```
+
+Each is asked of this document's state and answers about the field the component is kept in,
+so a host showing a case never reads the state to do it. `uses` asks for `^1.1` of both
+because that is the version that declared them, and a restore takes the lowest version a
+constraint allows.
+
 ## What it deliberately does not do
 
 **A refused signature does not deny the request.** It leaves `req.deny` as the only move, so
@@ -78,7 +94,7 @@ Both components' state is a field of this one's, so a case is still one document
 ```json
 {
   "$schema": "rulealize/state/v1",
-  "ruleSet": "Rulealize.RuleSet.SignedRequest@1.0.0",
+  "ruleSet": "Rulealize.RuleSet.SignedRequest@1.1.0",
 
   "data": {
     "req":  { "data": { "subjects": ["budget-q3", "budget-q4"], "stage": "draft", "subject": null } },
@@ -105,8 +121,9 @@ it holds this the way this holds its own two.
 
 ## Trying it
 
-Needs [Rulealize.Cli](https://github.com/reny-develop/Rulealize.Cli) 0.8.0 or later, which is
-the version that fetches what a `uses` names:
+Needs [Rulealize.Cli](https://github.com/reny-develop/Rulealize.Cli) 0.13.0 or later: 0.8.0 is
+the version that fetches what a `uses` names, and 0.13.0 the first whose runtime reads the
+`projections` the two documents it holds declare from 1.1.0:
 
 ```sh
 dotnet tool install -g Rulealize.Cli

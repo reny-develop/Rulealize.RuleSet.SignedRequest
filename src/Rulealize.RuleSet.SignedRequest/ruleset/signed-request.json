@@ -1,7 +1,7 @@
 {
   "$schema": "rulealize/ruleset/v1",
   "id": "Rulealize.RuleSet.SignedRequest",
-  "version": "1.0.0",
+  "version": "1.1.0",
 
   // A request that may not be granted until enough people have signed it.
   //
@@ -47,6 +47,11 @@
   // Both are optional once `uses` declares something, and this document needs neither: its
   // state is its components' and every move is theirs. That is worth seeing once — a
   // composite can be nothing but the guard, and this one is.
+  //
+  // No projections of its own either, for the same reason: what a screen shows of a case is
+  // what its halves say, offered through this one as `req.stage`, `sigs.waiting` and the
+  // rest. `uses` asks for `^1.1` because that is where they declared them; a restore takes
+  // the lowest version a constraint allows, and 1.0.0 of either says nothing.
 
   "requires": [
     { "plugin": "Rulealize.Plugin.State",      "version": "^1.0" },
@@ -56,8 +61,8 @@
   ],
 
   "uses": [
-    { "ruleSet": "Rulealize.RuleSet.Request",    "version": "^1.0", "as": "req"  },
-    { "ruleSet": "Rulealize.RuleSet.Signatures", "version": "^1.0", "as": "sigs" }
+    { "ruleSet": "Rulealize.RuleSet.Request",    "version": "^1.1", "as": "req"  },
+    { "ruleSet": "Rulealize.RuleSet.Signatures", "version": "^1.1", "as": "sigs" }
   ],
 
   "held": {
